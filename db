@@ -1,0 +1,36 @@
+<?php
+class Database {
+    public $conn = NULL;
+    function __construct() {
+        $servername = "localhost";
+        $username = "root";
+        $password = "anitscse034";
+        $dbname = "CarRentals";
+        $this->conn = mysqli_connect($servername, $username, $password, $dbname);
+        if (!$this->conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+    }
+    function print_all($result) {
+        while($row = mysqli_fetch_assoc($result)){
+          foreach($row as $val) {
+              echo "$val ";
+          }
+          echo "<br>";
+        }
+    }
+    function register($u_id, $password, $name, $dob) {
+        $query = "INSERT INTO User
+                    VALUES
+                    ($u_id, '$password', '$name', '$dob', 1)";
+        $registration_status = mysqli_query($this->conn, $query);
+        return $registration_status;
+    }
+    function login($user_id, $password) {
+        $query = "SELECT * FROM User WHERE u_id = $user_id AND u_password = '$password'";
+        $user = mysqli_query($this->conn, $query);
+        if (mysqli_num_rows($user) == 1) {
+          return True;
+        }
+        return False;
+    }
